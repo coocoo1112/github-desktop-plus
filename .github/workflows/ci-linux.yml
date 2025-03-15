@@ -142,14 +142,12 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          name: GitHub Desktop for Linux ${{ env.RELEASE_TAG_WITHOUT_PREFIX }}
-          body_path: script/release_notes.txt
+          name: GitHub Desktop Plus ${{ env.RELEASE_TAG_WITHOUT_PREFIX }}
           files: |
             artifacts/**/*.AppImage
             artifacts/**/*.deb
             artifacts/**/*.rpm
-            artifacts/**/*.sha256
-          draft: true
+          draft: false
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
