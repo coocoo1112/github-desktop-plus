@@ -71,18 +71,7 @@ import {
   WorkingDirectoryStatus,
 } from '../../models/status'
 import { TipState, tipEquals, IValidBranch } from '../../models/tip'
-import {
-  DefaultCommitMessage,
-  ICommitMessage,
-} from '../../models/commit-message'
-import {
-  Progress,
-  ICheckoutProgress,
-  IFetchProgress,
-  IRevertProgress,
-  IMultiCommitOperationProgress,
-} from '../../models/progress'
-import { Popup, PopupType } from '../../models/popup'
+import { DefaultCommitMessage } from '../../models/commit-message'
 import { themeChangeMonitor } from '../../ui/lib/theme-change-monitor'
 import { getAppPath } from '../../ui/lib/app-proxy'
 import {
@@ -92,7 +81,6 @@ import {
   getPersistedThemeName,
   setPersistedTheme,
 } from '../../ui/lib/application-theme'
-import { themeChangeMonitor } from '../../ui/lib/theme-change-monitor'
 import { TitleBarStyle } from '../../ui/lib/title-bar-style'
 import {
   getAppMenu,
