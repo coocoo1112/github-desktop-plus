@@ -72,7 +72,8 @@
       color: var(--list-item-badge-color);
       background: var(--branch-pill-background-color);
       font-size: var(--font-size-sm);
-      margin-left: var(--spacing-half);
+      margin-left: var(--spacing);
+      margin-right: var(--spacing-half);
       padding: 0 var(--spacing-half);
       border-radius: var(--border-radius);
       @include ellipsis;
