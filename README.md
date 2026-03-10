@@ -21,6 +21,7 @@ This is an **up-to-date** fork of [GitHub Desktop](https://desktop.github.com) w
 ### General:
 
 - Experimental support for **multiple accounts** of the same endpoint (e.g. multiple GitHub accounts).
+- Support for **Git Worktrees**: view and manage all your worktrees in the same repository, with the ability to easily switch between them.
 - **Bitbucket** and **GitLab** integration:
   - Clone repositories from within the app.
   - Preview and create pull requests.
@@ -35,6 +36,7 @@ This is an **up-to-date** fork of [GitHub Desktop](https://desktop.github.com) w
 ### Repositories list:
 
 - "**Pull all**" button to fetch and pull all your repositories at once.
+- Allow showing the **current branch name** next to the repository name.
 - Allow **hiding** the "**Recent**" repositories section.
 - Allow customizing the **repository groups** to better organize your repositories (right click on a repository and select "Change group name").
 

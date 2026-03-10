@@ -1,20 +1,26 @@
-GitHub Desktop Plus v3.5.6-alpha4
+GitHub Desktop Plus v3.5.6-alpha5
 
 ## **Changes and improvements:**
 
-- The keyboard shortcut for showing Worktrees (`Ctrl+E`) now works even if worktrees are disabled in the Appearance settings. Thanks @devxoul!
+- **Windows:** GitHub Desktop Plus is now available for installation using **winget**. Thanks @guplem!  
+  To install it, simply run the following command in your terminal:  
+  ```powershell
+  winget install polrivero.GitHubDesktopPlus
+  ```
 
-- Added support for [GitLab subgroups](https://docs.gitlab.com/user/group/subgroups/). For example: `https://gitlab.com/my-org/subgroup/my-repo` will now be correctly parsed and displayed.
+- Allow displaying the **branch name** next to the repository name in the repository list.   Thanks @guplem!  
+  - To enable this feature, go to **File > Options > Appearance > "Show current branch name next to repository name"** and select either *"Always"* or *"When it's not the default branch"*.
+  - I personally recommend the *"When it's not the default branch"* option, to quickly identify repositories that may have work in progress.
+  - Remember that you can right-click any branch in the branch list and select **"Set as default branch"**.
 
-- Trying to undo an already pushed commit will now show a confirmation dialog. This change was made to avoid accidentally undoing commits when the user intended to *"Revert"* (create a new, opposite commit) instead of *"Undo"* (remove the last commit).
+- The "Worktrees" selector has been moved to the left of the branch selector, so the order is now: **Worktrees | Branches | Pull/Push**. Thanks @devxoul!
 
-- When comparing two branches, the correct tab ("Ahead" or "Behind") is now selected by default based on the relationship between the branches.
+- Renamed the context menu item "Make the Default Branch" to "Set as Default Branch".
 
+- Improved the error messages when using the "Pull all" button with unpublished branches.
 
 ## **Fixes:**
 
-- Cloning repositories by URL is no longer broken.
+- The package name in Windows has been changed to `GitHubDesktopPlus`, so it should no longer conflict with the official GitHub Desktop app. Now, both apps can be installed and should work without interfering with each other.
 
-- The "Checkout commit" and "Cherry pick" context menu items now work correctly when the commit list is filtered (by typing in the search box or by comparing branches).
-
-- When comparing the current branch with another branch, dragging commits from the commit list onto the current branch will now trigger a cherry-pick operation instead of being ignored.
+- Improved visibility of **unpushed branches** in the branch list by using a higher-contrast color in light mode and using bold text.
