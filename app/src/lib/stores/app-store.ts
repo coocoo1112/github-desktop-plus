@@ -3631,6 +3631,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
               }))
             },
             noVerify: state.skipCommitHooks,
+            signOff: state.signOffCommits,
           }).catch(err => (aborted ? undefined : Promise.reject(err)))
         },
         { gitContext: { kind: 'commit' }, repository }
