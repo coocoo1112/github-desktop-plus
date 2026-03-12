@@ -55,12 +55,12 @@ jobs:
     env:
       RELEASE_CHANNEL: ${{ inputs.environment }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: ${{ inputs.repository || github.repository }}
           ref: ${{ inputs.ref }}
           submodules: recursive
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: yarn
@@ -132,16 +132,16 @@ jobs:
       SEMVER_COMPATIBLE_VERSION:
         ${{ needs.compute_version.outputs.SEMVER_COMPATIBLE_VERSION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: ${{ inputs.repository || github.repository }}
           ref: ${{ inputs.ref }}
           submodules: recursive
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: yarn
@@ -217,7 +217,7 @@ jobs:
         run:
           script/generate-appimage-zsync.sh dist/*.AppImage ${{ matrix.arch }}
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{matrix.friendlyName}}-${{matrix.arch}}
           path: |
@@ -243,7 +243,7 @@ jobs:
     env:
       APP_VERSION: ${{ needs.compute_version.outputs.APP_VERSION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -295,7 +295,7 @@ jobs:
     env:
       APP_VERSION: ${{ needs.compute_version.outputs.APP_VERSION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -360,7 +360,7 @@ jobs:
           done
 
       - name: Upload PKGBUILD files
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: PKGBUILDs
           path: |
