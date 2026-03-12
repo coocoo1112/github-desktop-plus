@@ -8,7 +8,11 @@ import * as path from 'path'
 import * as electronInstaller from 'electron-winstaller'
 import * as crypto from 'crypto'
 
-import { getProductName, getCompanyName } from '../app/package-info'
+import {
+  getProductName,
+  getCompanyName,
+  getSemverCompatibleVersion,
+} from '../app/package-info'
 import {
   getDistPath,
   getOSXZipPath,
@@ -237,17 +241,4 @@ async function packageLinux() {
     console.error('A problem occurred with the packaging step', err)
     process.exit(1)
   }
-}
-
-function getSemverCompatibleVersion() {
-  const version = getVersion()
-  const parts = version.split('.')
-  if (parts.length > 3) {
-    const major = parts[0]
-    const minor = parts[1]
-    const patch = parts[2]
-    const rest = parts.slice(3).join('-')
-    return `${major}.${minor}.${patch}-r${rest}`
-  }
-  return version
 }

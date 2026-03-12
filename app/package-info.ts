@@ -14,6 +14,10 @@ export function getVersion() {
   return process.env.APP_VERSION || version
 }
 
+export function getSemverCompatibleVersion() {
+  return process.env.SEMVER_COMPATIBLE_VERSION || version
+}
+
 export function getBundleID() {
   return process.env.NODE_ENV === 'development' ? `${bundleID}Dev` : bundleID
 }

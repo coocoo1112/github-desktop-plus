@@ -79,6 +79,7 @@ jobs:
       contents: read
     outputs:
       APP_VERSION: ${{ env.APP_VERSION }}
+      SEMVER_COMPATIBLE_VERSION: ${{ env.SEMVER_COMPATIBLE_VERSION }}
     steps:
       - name: Compute app version
         run: |
@@ -89,6 +90,20 @@ jobs:
           fi
           echo "Computed version: ${VERSION}"
           echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
+
+          # Squirrel (and therefore the Windows release) requires strict semver
+          IFS='.' read -ra parts <<< "$VERSION"
+          if [ "${#parts[@]}" -gt 3 ]; then
+            major="${parts[0]}"
+            minor="${parts[1]}"
+            patch="${parts[2]}"
+            rest=$(IFS='-'; echo "${parts[*]:3}")
+            SEMVER_COMPATIBLE_VERSION="${major}.${minor}.${patch}-r${rest}"
+          else
+            SEMVER_COMPATIBLE_VERSION="$VERSION"
+          fi
+          echo "Semver compatible version: ${SEMVER_COMPATIBLE_VERSION}"
+          echo "SEMVER_COMPATIBLE_VERSION=$SEMVER_COMPATIBLE_VERSION" >> $GITHUB_ENV
 
   build:
     name: ${{ matrix.friendlyName }} ${{ matrix.arch }}
@@ -114,6 +129,8 @@ jobs:
       RELEASE_CHANNEL: ${{ inputs.environment }}
       # build:prod expects APP_VERSION to be set in the environment
       APP_VERSION: ${{ needs.compute_version.outputs.APP_VERSION }}
+      SEMVER_COMPATIBLE_VERSION:
+        ${{ needs.compute_version.outputs.SEMVER_COMPATIBLE_VERSION }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -533,7 +550,7 @@ jobs:
 
   release_winget:
     name: Publish winget package
-    needs: release_github
+    needs: [release_github, compute_version]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     permissions: {}
@@ -542,5 +559,7 @@ jobs:
         uses: vedantmgoyal9/winget-releaser@v2
         with:
           identifier: polrivero.GitHubDesktopPlus
+          version:
+            ${{ needs.compute_version.outputs.SEMVER_COMPATIBLE_VERSION }}
           installers-regex: '\.exe$'
           token: ${{ secrets.WINGET_TOKEN }}
