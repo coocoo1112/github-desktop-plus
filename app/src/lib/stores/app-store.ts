@@ -24,7 +24,7 @@ import {
   ICommitContext,
   shortenSHA,
 } from '../../models/commit'
-import { ICommitMessage } from '../../models/commit-message'
+import { DefaultCommitMessage, ICommitMessage } from '../../models/commit-message'
 import {
   DiffSelection,
   DiffSelectionType,
@@ -71,7 +71,6 @@ import {
   WorkingDirectoryStatus,
 } from '../../models/status'
 import { TipState, tipEquals, IValidBranch } from '../../models/tip'
-import { DefaultCommitMessage } from '../../models/commit-message'
 import { themeChangeMonitor } from '../../ui/lib/theme-change-monitor'
 import { getAppPath } from '../../ui/lib/app-proxy'
 import {

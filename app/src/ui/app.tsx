@@ -963,7 +963,7 @@ export class App extends React.Component<IAppProps, IAppState> {
 
   private showWorktrees() {
     const state = this.state.selectedState
-    if (state == null || state.type !== SelectionType.Repository) {
+    if (state?.type !== SelectionType.Repository) {
       return
     }
 
@@ -973,8 +973,7 @@ export class App extends React.Component<IAppProps, IAppState> {
     }
 
     if (
-      this.state.currentFoldout &&
-      this.state.currentFoldout.type === FoldoutType.Worktree
+      this.state.currentFoldout?.type === FoldoutType.Worktree
     ) {
       return this.props.dispatcher.closeFoldout(FoldoutType.Worktree)
     }
@@ -984,7 +983,7 @@ export class App extends React.Component<IAppProps, IAppState> {
 
   private push(options?: { forceWithLease: boolean }) {
     const state = this.state.selectedState
-    if (state == null || state.type !== SelectionType.Repository) {
+    if (state?.type !== SelectionType.Repository) {
       return
     }
 
@@ -3454,7 +3453,7 @@ export class App extends React.Component<IAppProps, IAppState> {
   private renderWorktreeToolbarButton(): JSX.Element | null {
     const selection = this.state.selectedState
 
-    if (selection == null || selection.type !== SelectionType.Repository) {
+    if (selection?.type !== SelectionType.Repository) {
       return null
     }
 
