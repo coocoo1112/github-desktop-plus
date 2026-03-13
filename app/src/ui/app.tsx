@@ -65,6 +65,8 @@ import {
   selectAllWindowContents,
   installWindowsCLI,
   uninstallWindowsCLI,
+  openRepositoryInNewWindow,
+  setWindowTitle,
 } from './main-process-proxy'
 import { DiscardChanges } from './discard-changes'
 import { Welcome } from './welcome'
@@ -1024,10 +1026,38 @@ export class App extends React.Component<IAppProps, IAppState> {
     document.addEventListener('focus', this.onDocumentFocus, {
       capture: true,
     })
+
+    this.updateWindowTitle()
+  }
+
+  public componentDidUpdate(
+    _prevProps: IAppProps,
+    prevState: IAppState
+  ): void {
+    if (this.getWindowTitle(prevState) !== this.getWindowTitle()) {
+      this.updateWindowTitle()
+    }
   }
 
   private onDocumentFocus = (event: FocusEvent) => {
     this.props.dispatcher.appFocusedElementChanged()
+  }
+
+  private getWindowTitle(state: IAppState = this.state): string {
+    const repository = state.selectedState?.repository
+    if (repository) {
+      const repositoryTitle =
+        repository instanceof Repository
+          ? repository.alias ?? repository.name
+          : repository.name
+      return `${repositoryTitle} - GitHub Desktop`
+    }
+
+    return 'GitHub Desktop'
+  }
+
+  private updateWindowTitle() {
+    setWindowTitle(this.getWindowTitle())
   }
 
   /**
@@ -2934,6 +2964,7 @@ export class App extends React.Component<IAppProps, IAppState> {
         }
         onRemoveRepository={this.removeRepository}
         onViewOnGitHub={this.viewOnGitHub}
+        onOpenInNewWindow={this.openRepositoryInNewWindow}
         onOpenInShell={this.openInShell}
         onShowRepository={this.showRepository}
         onOpenInExternalEditor={this.openInExternalEditor}
@@ -2964,6 +2995,16 @@ export class App extends React.Component<IAppProps, IAppState> {
     }
 
     this.props.dispatcher.openShell(repository.path)
+  }
+
+  private openRepositoryInNewWindow = (
+    repository: Repository | CloningRepository
+  ) => {
+    if (!(repository instanceof Repository) || repository.missing) {
+      return
+    }
+
+    openRepositoryInNewWindow(repository.path)
   }
 
   private openFileInExternalEditor = (fullPath: string) => {
