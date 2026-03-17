@@ -24,7 +24,6 @@ import { SectionFilterList } from '../lib/section-filter-list'
 import { Octicon } from '../octicons'
 import * as octicons from '../octicons/octicons.generated'
 import memoizeOne from 'memoize-one'
-import { getAuthors } from '../../lib/git/log'
 import { Repository } from '../../models/repository'
 import { formatDate } from '../../lib/format-date'
 
@@ -107,18 +106,14 @@ interface IBranchListProps {
   readonly textbox?: TextBox
 
   /** Aria label for a specific row */
-  readonly getBranchAriaLabel: (
-    item: IBranchListItem,
-    authorDate: Date | undefined
-  ) => string | undefined
+  readonly getBranchAriaLabel: (item: IBranchListItem) => string | undefined
 
   /**
    * Render function to apply to each branch in the list
    */
   readonly renderBranch: (
     item: IBranchListItem,
-    matches: IMatches,
-    authorDate: Date | undefined
+    matches: IMatches
   ) => JSX.Element
 
   /**
@@ -145,17 +140,8 @@ interface IBranchListProps {
   readonly onDeleteBranch?: (branchName: string) => void
 }
 
-interface IBranchListState {
-  readonly commitAuthorDates: ReadonlyMap<string, Date>
-}
-
-const commitDateCache = new Map<string, Date>()
-
 /** The Branches list component. */
-export class BranchList extends React.Component<
-  IBranchListProps,
-  IBranchListState
-> {
+export class BranchList extends React.Component<IBranchListProps> {
   private branchFilterList: SectionFilterList<IBranchListItem> | null = null
 
   private getGroups = memoizeOne(groupBranches)
@@ -167,7 +153,7 @@ export class BranchList extends React.Component<
   )
 
   /**
-   * Generate a new object any time groups or commitAuthorDates changes
+   * Generate a new object any time groups changes
    * in order to force the list to re-render.
    *
    * Note, change is determined by reference equality. This opaque object
@@ -179,14 +165,11 @@ export class BranchList extends React.Component<
    * Using a guid which we used to do works but is overkill.
    */
   private getInvalidationProp = memoizeOne(
-    (
-      _groups: ReturnType<typeof groupBranches>,
-      _commitAuthorDates: IBranchListState['commitAuthorDates']
-    ) => ({})
+    (_groups: ReturnType<typeof groupBranches>) => ({})
   )
 
   private get invalidationProp() {
-    return this.getInvalidationProp(this.groups, this.state.commitAuthorDates)
+    return this.getInvalidationProp(this.groups)
   }
 
   private get groups() {
@@ -203,62 +186,11 @@ export class BranchList extends React.Component<
     return this.getSelectedItem(this.groups, this.props.selectedBranch)
   }
 
-  public constructor(props: IBranchListProps) {
-    super(props)
-    this.state = {
-      commitAuthorDates: new Map<string, Date>(),
-    }
-  }
-
   public selectNextItem(focus: boolean = false, direction: SelectionDirection) {
     if (this.branchFilterList !== null) {
       this.branchFilterList.selectNextItem(focus, direction)
     }
   }
-
-  public componentDidUpdate(prevProps: IBranchListProps) {
-    if (prevProps.allBranches !== this.props.allBranches) {
-      this.populateCommitDates()
-    }
-  }
-
-  private populateCommitDates = () => {
-    const cached = new Map<string, Date>()
-    const missing = new Array<string>()
-    const uniqShas = new Set(this.props.allBranches.map(b => b.tip.sha))
-
-    for (const sha of uniqShas) {
-      const date = commitDateCache.get(sha)
-      if (date) {
-        cached.set(sha, date)
-      } else {
-        missing.push(sha)
-      }
-    }
-
-    // Clean up the cache
-    for (const sha of commitDateCache.keys()) {
-      if (!uniqShas.has(sha)) {
-        commitDateCache.delete(sha)
-      }
-    }
-
-    this.setState({ commitAuthorDates: cached })
-
-    if (missing.length > 0) {
-      getAuthors(this.props.repository, missing)
-        .then(x => {
-          x.forEach(({ date }, i) => commitDateCache.set(missing[i], date))
-          this.populateCommitDates()
-        })
-        .catch(e => log.error(`Failed to populate commit dates`, e))
-    }
-  }
-
-  public componentDidMount() {
-    this.populateCommitDates()
-  }
-
   public render() {
     return (
       <SectionFilterList<IBranchListItem>
@@ -334,25 +266,18 @@ export class BranchList extends React.Component<
   }
 
   private renderItem = (item: IBranchListItem, matches: IMatches) => {
-    return this.props.renderBranch(
-      item,
-      matches,
-      this.state.commitAuthorDates.get(item.branch.tip.sha)
-    )
+    return this.props.renderBranch(item, matches)
   }
 
   private renderRowFocusTooltip = (
     item: IBranchListItem
   ): JSX.Element | string | null => {
     const { tip, name } = item.branch
-    const authorDate = this.state.commitAuthorDates.get(tip.sha)
 
-    const absoluteDate = authorDate
-      ? formatDate(authorDate, {
-          dateStyle: 'full',
-          timeStyle: 'short',
-        })
-      : null
+    const absoluteDate = formatDate(tip.author.date, {
+      dateStyle: 'full',
+      timeStyle: 'short',
+    })
 
     const otherWorktreeName = this.inUseByOtherWorktreeName(item)
     return (
@@ -400,10 +325,7 @@ export class BranchList extends React.Component<
   }
 
   private getItemAriaLabel = (item: IBranchListItem) => {
-    return this.props.getBranchAriaLabel(
-      item,
-      this.state.commitAuthorDates.get(item.branch.tip.sha)
-    )
+    return this.props.getBranchAriaLabel(item)
   }
 
   private getGroupAriaLabel = (group: number) => {

@@ -11,6 +11,7 @@ import {
 
 const stubTip: IBranchTip = {
   sha: 'deadbeef',
+  author: { date: new Date(0) },
 }
 
 const defaultBranch: Branch = {

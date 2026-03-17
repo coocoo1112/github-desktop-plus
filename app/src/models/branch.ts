@@ -28,9 +28,14 @@ export interface ITrackingBranch {
   readonly upstreamSha: string
 }
 
+export interface IAuthor {
+  readonly date: Date
+}
+
 /** Basic data about the latest commit on the branch. */
 export interface IBranchTip {
   readonly sha: string
+  readonly author: IAuthor
 }
 
 /** Default rules for where to create a branch from */

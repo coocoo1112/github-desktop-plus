@@ -21,6 +21,7 @@ export async function getBranches(
     upstreamTrackingBranch: '%(upstream:track)',
     sha: '%(objectname)',
     symRef: '%(symref)',
+    authorDate: '%(authordate:iso8601)',
   })
 
   if (!prefixes || !prefixes.length) {
@@ -41,7 +42,7 @@ export async function getBranches(
     return []
   }
 
-  const branches = []
+  const branches: Branch[] = []
 
   for (const ref of parse(result.stdout)) {
     // excude symbolic refs from the branch list
@@ -49,7 +50,12 @@ export async function getBranches(
       continue
     }
 
-    const tip: IBranchTip = { sha: ref.sha }
+    const tip: IBranchTip = {
+      sha: ref.sha,
+      author: {
+        date: new Date(ref.authorDate),
+      },
+    }
 
     const type = ref.fullName.startsWith('refs/heads')
       ? BranchType.Local

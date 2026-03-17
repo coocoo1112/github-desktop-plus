@@ -223,26 +223,18 @@ export class BranchesContainer extends React.Component<
     )
   }
 
-  private renderBranch = (
-    item: IBranchListItem,
-    matches: IMatches,
-    authorDate: Date | undefined
-  ) => {
+  private renderBranch = (item: IBranchListItem, matches: IMatches) => {
     return renderDefaultBranch(
       item,
       matches,
       this.props.currentBranch,
-      authorDate,
       this.onDropOntoBranch,
       this.onDropOntoCurrentBranch
     )
   }
 
-  private getBranchAriaLabel = (
-    item: IBranchListItem,
-    authorDate: Date | undefined
-  ): string => {
-    return getDefaultAriaLabelForBranch(item, authorDate)
+  private getBranchAriaLabel = (item: IBranchListItem): string => {
+    return getDefaultAriaLabelForBranch(item)
   }
 
   private renderSelectedTab() {
