@@ -15,10 +15,14 @@ import { PopupType } from '../../models/popup'
 import { Account } from '../../models/account'
 import { IAPIRepoRuleset } from '../../lib/api'
 import { Emoji } from '../../lib/emoji'
+import { BranchSortOrder } from '../../models/branch-sort-order'
 
 export interface IMultiCommitOperationProps {
   readonly repository: Repository
   readonly dispatcher: Dispatcher
+
+  // eslint-disable-next-line react/no-unused-prop-types
+  readonly branchSortOrder: BranchSortOrder
 
   /** The current state of the multi commit operation */
   readonly state: IMultiCommitOperationState

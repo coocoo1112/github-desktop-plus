@@ -3,6 +3,7 @@ import { Branch } from '../../../models/branch'
 import { Repository } from '../../../models/repository'
 import { IMatches } from '../../../lib/fuzzy-find'
 import { Dialog, DialogContent, DialogFooter } from '../../dialog'
+import { BranchSortOrder } from '../../../models/branch-sort-order'
 import {
   BranchList,
   IBranchListItem,
@@ -87,6 +88,9 @@ export interface IBaseChooseBranchDialogProps {
    * Type of operation (Merge, Squash, Rebase)
    */
   readonly operation: MultiCommitOperationKind
+
+  /** The sort order for branch lists in the current user preferences. */
+  readonly branchSortOrder: BranchSortOrder
 
   /**
    * A function that's called when the dialog is dismissed by the user in the
@@ -237,6 +241,7 @@ export class ChooseBranchDialog extends React.Component<
             defaultBranch={this.props.defaultBranch}
             recentBranches={this.props.recentBranches}
             allWorktrees={[]}
+            branchSortOrder={this.props.branchSortOrder}
             filterText={this.state.filterText}
             onFilterTextChanged={this.onFilterTextChanged}
             selectedBranch={selectedBranch}

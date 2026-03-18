@@ -4,6 +4,7 @@ import { Branch } from '../../models/branch'
 import { ClickSource } from '../lib/list'
 import { PopoverDropdown } from '../lib/popover-dropdown'
 import { BranchList } from './branch-list'
+import { BranchSortOrder } from '../../models/branch-sort-order'
 import {
   getDefaultAriaLabelForBranch,
   renderDefaultBranch,
@@ -36,6 +37,11 @@ interface IBranchSelectProps {
    * See IBranchesState.recentBranches
    */
   readonly recentBranches: ReadonlyArray<Branch>
+
+  /**
+   * The sort order for branch lists in the current user preferences.
+   */
+  readonly branchSortOrder: BranchSortOrder
 
   /** Called when the user changes the selected branch. */
   readonly onChange?: (branch: Branch) => void
@@ -115,6 +121,7 @@ export class BranchSelect extends React.Component<
           allBranches={allBranches}
           currentBranch={currentBranch}
           defaultBranch={defaultBranch}
+          branchSortOrder={this.props.branchSortOrder}
           recentBranches={recentBranches}
           allWorktrees={[]}
           filterText={filterText}

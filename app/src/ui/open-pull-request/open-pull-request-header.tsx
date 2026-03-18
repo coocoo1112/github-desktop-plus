@@ -5,6 +5,7 @@ import { DialogHeader } from '../dialog/header'
 import { Ref } from '../lib/ref'
 import { Repository } from '../../models/repository'
 import { IChangesetData } from '../../lib/git'
+import { BranchSortOrder } from '../../models/branch-sort-order'
 
 export const OpenPullRequestDialogId = 'Dialog_Open_Pull_Request'
 
@@ -40,6 +41,9 @@ interface IOpenPullRequestDialogHeaderProps {
 
   /** The count of commits of the pull request */
   readonly commitCount: number
+
+  /** The sort order for branch lists in the current user preferences. */
+  readonly branchSortOrder: BranchSortOrder
 
   /** The changeset data associated with the selected commit */
   readonly changesetData: IChangesetData
@@ -95,6 +99,7 @@ export class OpenPullRequestDialogHeader extends React.Component<IOpenPullReques
             currentBranch={currentBranch}
             allBranches={prBaseBranches}
             recentBranches={prRecentBaseBranches}
+            branchSortOrder={this.props.branchSortOrder}
             onChange={onBranchChange}
             noBranchesMessage={
               <>

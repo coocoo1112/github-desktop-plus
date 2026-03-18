@@ -29,6 +29,7 @@ export class MultiCommitOperation extends React.Component<IMultiCommitOperationP
             askForConfirmationOnForcePush={
               this.props.askForConfirmationOnForcePush
             }
+            branchSortOrder={this.props.branchSortOrder}
             accounts={this.props.accounts}
             cachedRepoRulesets={this.props.cachedRepoRulesets}
             openFileInExternalEditor={this.props.openFileInExternalEditor}
@@ -48,6 +49,7 @@ export class MultiCommitOperation extends React.Component<IMultiCommitOperationP
             askForConfirmationOnForcePush={
               this.props.askForConfirmationOnForcePush
             }
+            branchSortOrder={this.props.branchSortOrder}
             accounts={this.props.accounts}
             cachedRepoRulesets={this.props.cachedRepoRulesets}
             openFileInExternalEditor={this.props.openFileInExternalEditor}
@@ -67,6 +69,7 @@ export class MultiCommitOperation extends React.Component<IMultiCommitOperationP
             askForConfirmationOnForcePush={
               this.props.askForConfirmationOnForcePush
             }
+            branchSortOrder={this.props.branchSortOrder}
             accounts={this.props.accounts}
             cachedRepoRulesets={this.props.cachedRepoRulesets}
             openFileInExternalEditor={this.props.openFileInExternalEditor}

@@ -123,6 +123,7 @@ export abstract class Merge extends BaseMultiCommitOperation {
             ? MultiCommitOperationKind.Squash
             : MultiCommitOperationKind.Merge
         }
+        branchSortOrder={this.props.branchSortOrder}
         onDismissed={this.onFlowEnded}
       />
     )
