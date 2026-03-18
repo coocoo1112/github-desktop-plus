@@ -63,6 +63,7 @@ export abstract class Rebase extends BaseRebase {
         currentBranch={currentBranch}
         initialBranch={initialBranch}
         operation={MultiCommitOperationKind.Rebase}
+        branchSortOrder={this.props.branchSortOrder}
         onDismissed={this.onFlowEnded}
       />
     )

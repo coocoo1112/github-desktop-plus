@@ -15,6 +15,7 @@ import {
 import { ClickSource } from '../../lib/list'
 import { getDefaultAriaLabelForBranch } from '../../branches/branch-renderer'
 import { Repository } from '../../../models/repository'
+import { BranchSortOrder } from '../../../models/branch-sort-order'
 
 interface IChooseTargetBranchDialogProps {
   readonly repository: Repository
@@ -59,6 +60,9 @@ interface IChooseTargetBranchDialogProps {
    * Call back to invoke create new branch dialog
    */
   readonly onCreateNewBranch: (targetBranchName: string) => void
+
+  /** The sort order for branch lists in the current user preferences. */
+  readonly branchSortOrder: BranchSortOrder
 }
 
 interface IChooseTargetBranchDialogState {
@@ -191,6 +195,7 @@ export class ChooseTargetBranchDialog extends React.Component<
             defaultBranch={this.props.defaultBranch}
             recentBranches={this.props.recentBranches}
             allWorktrees={[]}
+            branchSortOrder={this.props.branchSortOrder}
             filterText={this.state.filterText}
             onFilterTextChanged={this.onFilterTextChanged}
             onFilterListResultsChanged={this.onFilterListResultsChanged}

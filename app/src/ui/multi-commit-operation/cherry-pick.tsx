@@ -80,6 +80,7 @@ export abstract class CherryPick extends BaseMultiCommitOperation {
       <ChooseTargetBranchDialog
         key="choose-target-branch"
         repository={this.props.repository}
+        branchSortOrder={this.props.branchSortOrder}
         allBranches={allBranches}
         defaultBranch={defaultBranch}
         recentBranches={recentBranches}

@@ -2281,6 +2281,7 @@ export class App extends React.Component<IAppProps, IAppState> {
             askForConfirmationOnForcePush={
               this.state.askForConfirmationOnForcePush
             }
+            branchSortOrder={this.state.branchSortOrder}
             accounts={this.state.accounts}
             cachedRepoRulesets={this.state.cachedRepoRulesets}
             openFileInExternalEditor={this.getOpenFileInExternalEditorHandler(
@@ -2523,6 +2524,7 @@ export class App extends React.Component<IAppProps, IAppState> {
             externalEditorLabel={externalEditorLabel}
             showSideBySideDiff={showSideBySideDiff}
             currentBranchHasPullRequest={currentBranchHasPullRequest}
+            branchSortOrder={this.state.branchSortOrder}
             onDismissed={onPopupDismissedFn}
             onOpenInExternalEditor={this.onOpenInExternalEditor}
           />

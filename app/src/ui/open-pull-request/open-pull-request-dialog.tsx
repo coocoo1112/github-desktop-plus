@@ -16,6 +16,7 @@ import {
 import { PullRequestFilesChanged } from './pull-request-files-changed'
 import { PullRequestMergeStatus } from './pull-request-merge-status'
 import { ComputedAction } from '../../models/computed-action'
+import { BranchSortOrder } from '../../models/branch-sort-order'
 
 interface IOpenPullRequestDialogProps {
   readonly repository: Repository
@@ -73,6 +74,8 @@ interface IOpenPullRequestDialogProps {
 
   /** Width to use for the files list pane in the files changed view */
   readonly fileListWidth: IConstrainedValue
+
+  readonly branchSortOrder: BranchSortOrder
 
   /** If the latest commit of the pull request is not local, this will contain
    * it's SHA  */
@@ -132,6 +135,7 @@ export class OpenPullRequestDialog extends React.Component<IOpenPullRequestDialo
         defaultBranch={defaultBranch}
         prBaseBranches={prBaseBranches}
         prRecentBaseBranches={prRecentBaseBranches}
+        branchSortOrder={this.props.branchSortOrder}
         commitCount={commitSHAs?.length ?? 0}
         changesetData={changesetData}
         onBranchChange={this.onBranchChange}
