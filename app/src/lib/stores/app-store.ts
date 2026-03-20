@@ -186,6 +186,10 @@ import {
   BranchSortOrder,
   DEFAULT_BRANCH_SORT_ORDER,
 } from '../../models/branch-sort-order'
+import {
+  CommitDateDisplay,
+  defaultCommitDateDisplay,
+} from '../../models/commit-date-display'
 import { WorkflowPreferences } from '../../models/workflow-preferences'
 import { TrashNameLabel } from '../../ui/lib/context-menu'
 import { getDefaultDir } from '../../ui/lib/default-dir'
@@ -499,6 +503,7 @@ export const showDiffCheckMarksKey = 'diff-check-marks-visible'
 
 export const showBranchNameInRepoListKey = 'show-branch-name-in-repo-list'
 const branchSortOrderKey = 'branch-sort-order'
+const commitDateDisplayKey = 'commit-date-display'
 
 const commitMessageGenerationDisclaimerLastSeenKey =
   'commit-message-generation-disclaimer-last-seen'
@@ -669,6 +674,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
     defaultShowBranchNameInRepoListSetting
 
   private branchSortOrder: BranchSortOrder = DEFAULT_BRANCH_SORT_ORDER
+
+  private commitDateDisplay: CommitDateDisplay = defaultCommitDateDisplay
 
   private cachedRepoRulesets = new Map<number, IAPIRepoRuleset>()
 
@@ -1220,6 +1227,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       showDiffCheckMarks: this.showDiffCheckMarks,
       showBranchNameInRepoList: this.showBranchNameInRepoList,
       branchSortOrder: this.branchSortOrder,
+      commitDateDisplay: this.commitDateDisplay,
       updateState: updateStore.state,
       commitMessageGenerationDisclaimerLastSeen:
         this.commitMessageGenerationDisclaimerLastSeen,
@@ -2629,6 +2637,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.branchSortOrder =
       getEnum(branchSortOrderKey, BranchSortOrder) ?? DEFAULT_BRANCH_SORT_ORDER
+
+    this.commitDateDisplay =
+      getEnum(commitDateDisplayKey, CommitDateDisplay) ?? defaultCommitDateDisplay
 
     this.commitMessageGenerationDisclaimerLastSeen =
       getNumber(commitMessageGenerationDisclaimerLastSeenKey) ?? null
@@ -9217,6 +9228,14 @@ export class AppStore extends TypedBaseStore<IAppState> {
     if (branchSortOrder !== this.branchSortOrder) {
       this.branchSortOrder = branchSortOrder
       localStorage.setItem(branchSortOrderKey, branchSortOrder)
+      this.emitUpdate()
+    }
+  }
+
+  public _updateCommitDateDisplay(commitDateDisplay: CommitDateDisplay) {
+    if (commitDateDisplay !== this.commitDateDisplay) {
+      this.commitDateDisplay = commitDateDisplay
+      localStorage.setItem(commitDateDisplayKey, commitDateDisplay)
       this.emitUpdate()
     }
   }

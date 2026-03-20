@@ -16,6 +16,7 @@ import { ShowBranchNameInRepoListSetting } from '../../models/show-branch-name-i
 import { parseEnumValue } from '../../lib/enum'
 import { assertNever } from '../../lib/fatal-error'
 import { BranchSortOrder } from '../../models/branch-sort-order'
+import { CommitDateDisplay } from '../../models/commit-date-display'
 
 interface IAppearanceProps {
   readonly selectedTheme: ApplicationTheme
@@ -34,6 +35,8 @@ interface IAppearanceProps {
   ) => void
   readonly branchSortOrder: BranchSortOrder
   readonly onBranchSortOrderChanged: (sortOrder: BranchSortOrder) => void
+  readonly commitDateDisplay: CommitDateDisplay
+  readonly onCommitDateDisplayChanged: (value: CommitDateDisplay) => void
 }
 
 interface IAppearanceState {
@@ -274,6 +277,38 @@ export class Appearance extends React.Component<
     }
   }
 
+  private renderCommitDateDisplay() {
+    const { commitDateDisplay } = this.props
+
+    return (
+      <div className="advanced-section">
+        <h2 id="commit-date-display-heading">Commit date display</h2>
+
+        <RadioGroup<CommitDateDisplay>
+          ariaLabelledBy="commit-date-display-heading"
+          selectedKey={commitDateDisplay}
+          radioButtonKeys={[
+            CommitDateDisplay.Relative,
+            CommitDateDisplay.Absolute,
+          ]}
+          onSelectionChanged={this.props.onCommitDateDisplayChanged}
+          renderRadioButtonLabelContents={this.renderCommitDateDisplayLabel}
+        />
+      </div>
+    )
+  }
+
+  private renderCommitDateDisplayLabel = (value: CommitDateDisplay) => {
+    switch (value) {
+      case CommitDateDisplay.Relative:
+        return 'Relative (e.g. "3 days ago")'
+      case CommitDateDisplay.Absolute:
+        return 'Absolute (e.g. "Mar 14, 2026, 2:34 PM")'
+      default:
+        return assertNever(value, `Unknown commit date display: ${value}`)
+    }
+  }
+
   private renderRepositoryList() {
     return (
       <div className="advanced-section">
@@ -347,6 +382,7 @@ export class Appearance extends React.Component<
         {this.renderSelectedTheme()}
         {this.renderRepositoryList()}
         {this.renderBranchSortOrder()}
+        {this.renderCommitDateDisplay()}
         {this.renderWorktreeVisibility()}
         {this.renderSelectedTabSize()}
         {this.renderTitleBarStyleDropdown()}

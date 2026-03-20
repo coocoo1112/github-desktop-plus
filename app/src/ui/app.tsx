@@ -1660,6 +1660,7 @@ export class App extends React.Component<IAppProps, IAppState> {
             showDiffCheckMarks={this.state.showDiffCheckMarks}
             showBranchNameInRepoList={this.state.showBranchNameInRepoList}
             branchSortOrder={this.state.branchSortOrder}
+            commitDateDisplay={this.state.commitDateDisplay}
           />
         )
       case PopupType.RepositorySettings: {
@@ -3640,6 +3641,7 @@ export class App extends React.Component<IAppProps, IAppState> {
           issuesStore={this.props.issuesStore}
           gitHubUserStore={this.props.gitHubUserStore}
           branchSortOrder={state.branchSortOrder}
+          commitDateDisplay={state.commitDateDisplay}
           onViewCommitOnGitHub={this.onViewCommitOnGitHub}
           imageDiffType={state.imageDiffType}
           hideWhitespaceInChangesDiff={state.hideWhitespaceInChangesDiff}
