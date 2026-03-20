@@ -251,6 +251,14 @@ export class PullRequestFilesChanged extends React.Component<
     )
   }
 
+  private onFileSelectionChanged = (
+    files: ReadonlyArray<CommittedFileChange>
+  ) => {
+    if (files.length > 0) {
+      this.onFileSelected(files[0])
+    }
+  }
+
   private onRowDoubleClick = (row: number) => {
     const files = this.props.files
     const file = files[row]
@@ -292,8 +300,8 @@ export class PullRequestFilesChanged extends React.Component<
       >
         <FileList
           files={files}
-          onSelectedFileChanged={this.onFileSelected}
-          selectedFile={selectedFile}
+          onSelectionChanged={this.onFileSelectionChanged}
+          selectedFiles={selectedFile ? [selectedFile] : []}
           availableWidth={clamp(fileListWidth)}
           onContextMenu={this.onFileContextMenu}
           onRowDoubleClick={this.onRowDoubleClick}

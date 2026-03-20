@@ -14,11 +14,14 @@ import { openFile } from '../lib/open-file'
 import {
   isSafeFileExtension,
   CopyFilePathLabel,
+  CopyRelativeFilePathLabel,
+  CopySelectedPathsLabel,
+  CopySelectedRelativePathsLabel,
   DefaultEditorLabel,
   RevealInFileManagerLabel,
   OpenWithDefaultProgramLabel,
-  CopyRelativeFilePathLabel,
 } from '../lib/context-menu'
+import { EOL } from 'os'
 import { ThrottledScheduler } from '../lib/throttled-scheduler'
 
 import { Dispatcher } from '../dispatcher'
@@ -97,6 +100,7 @@ interface ISelectedCommitsProps {
 
 interface ISelectedCommitsState {
   readonly isExpanded: boolean
+  readonly selectedFiles: ReadonlyArray<CommittedFileChange>
 }
 
 /** The History component. Contains the commit list, commit summary, and diff. */
@@ -111,11 +115,17 @@ export class SelectedCommits extends React.Component<
 
     this.state = {
       isExpanded: false,
+      selectedFiles: [],
     }
   }
 
-  private onFileSelected = (file: CommittedFileChange) => {
-    this.props.dispatcher.changeFileSelection(this.props.repository, file)
+  private onFileSelectionChanged = (
+    files: ReadonlyArray<CommittedFileChange>
+  ) => {
+    this.setState({ selectedFiles: files })
+    if (files.length === 1) {
+      this.props.dispatcher.changeFileSelection(this.props.repository, files[0])
+    }
   }
 
   private onRowDoubleClick = (row: number) => {
@@ -131,9 +141,7 @@ export class SelectedCommits extends React.Component<
     const nextValue = nextProps.selectedCommits.map(c => c.sha).join('')
 
     if (currentValue !== nextValue) {
-      if (this.state.isExpanded) {
-        this.setState({ isExpanded: false })
-      }
+      this.setState({ isExpanded: false, selectedFiles: [] })
     }
   }
 
@@ -266,8 +274,8 @@ export class SelectedCommits extends React.Component<
         {this.renderFileHeader()}
         <FileList
           files={files}
-          onSelectedFileChanged={this.onFileSelected}
-          selectedFile={this.props.selectedFile}
+          onSelectionChanged={this.onFileSelectionChanged}
+          selectedFiles={this.state.selectedFiles}
           availableWidth={availableWidth}
           onContextMenu={this.onContextMenu}
           onRowDoubleClick={this.onRowDoubleClick}
@@ -404,6 +412,42 @@ export class SelectedCommits extends React.Component<
       ? `Open in ${externalEditorLabel}`
       : DefaultEditorLabel
 
+    const { selectedFiles } = this.state
+    const isMultiSelect =
+      selectedFiles.length > 1 && selectedFiles.some(f => f.path === file.path)
+    const filesToCopy = isMultiSelect ? selectedFiles : [file]
+
+    const copyPathItems: ReadonlyArray<IMenuItem> =
+      filesToCopy.length === 1
+        ? [
+            {
+              label: CopyFilePathLabel,
+              action: () => clipboard.writeText(fullPath),
+            },
+            {
+              label: CopyRelativeFilePathLabel,
+              action: () => clipboard.writeText(Path.normalize(file.path)),
+            },
+          ]
+        : [
+            {
+              label: CopySelectedPathsLabel,
+              action: () =>
+                clipboard.writeText(
+                  filesToCopy
+                    .map(f => Path.join(repository.path, f.path))
+                    .join(EOL)
+                ),
+            },
+            {
+              label: CopySelectedRelativePathsLabel,
+              action: () =>
+                clipboard.writeText(
+                  filesToCopy.map(f => Path.normalize(f.path)).join(EOL)
+                ),
+            },
+          ]
+
     const items: IMenuItem[] = [
       {
         label: RevealInFileManagerLabel,
@@ -421,14 +465,7 @@ export class SelectedCommits extends React.Component<
         enabled: isSafeExtension && fileExistsOnDisk,
       },
       { type: 'separator' },
-      {
-        label: CopyFilePathLabel,
-        action: () => clipboard.writeText(fullPath),
-      },
-      {
-        label: CopyRelativeFilePathLabel,
-        action: () => clipboard.writeText(Path.normalize(file.path)),
-      },
+      ...copyPathItems,
       { type: 'separator' },
     ]
 

@@ -75,6 +75,14 @@ export class StashDiffViewer extends React.PureComponent<IStashDiffViewerProps> 
       file
     )
 
+  private onFileSelectionChanged = (
+    files: ReadonlyArray<CommittedFileChange>
+  ) => {
+    if (files.length > 0) {
+      this.onSelectedFileChanged(files[0])
+    }
+  }
+
   private onRowDoubleClick = (row: number) => {
     const files = this.getFiles()
     const file = files[row]
@@ -150,8 +158,8 @@ export class StashDiffViewer extends React.PureComponent<IStashDiffViewerProps> 
           >
             <FileList
               files={files}
-              onSelectedFileChanged={this.onSelectedFileChanged}
-              selectedFile={selectedStashedFile}
+              onSelectionChanged={this.onFileSelectionChanged}
+              selectedFiles={selectedStashedFile ? [selectedStashedFile] : []}
               availableWidth={availableWidth}
               onRowDoubleClick={this.onRowDoubleClick}
             />

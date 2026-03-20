@@ -7,8 +7,10 @@ import { CommittedFileItem } from './committed-file-item'
 
 interface IFileListProps {
   readonly files: ReadonlyArray<CommittedFileChange>
-  readonly selectedFile: CommittedFileChange | null
-  readonly onSelectedFileChanged: (file: CommittedFileChange) => void
+  readonly selectedFiles: ReadonlyArray<CommittedFileChange>
+  readonly onSelectionChanged: (
+    files: ReadonlyArray<CommittedFileChange>
+  ) => void
   readonly onRowDoubleClick: (row: number, source: ClickSource) => void
   readonly availableWidth: number
   readonly onContextMenu?: (
@@ -33,9 +35,11 @@ export class FileList extends React.Component<IFileListProps, IFileListState> {
     }
   }
 
-  private onSelectedRowChanged = (row: number) => {
-    const file = this.props.files[row]
-    this.props.onSelectedFileChanged(file)
+  private onSelectionChanged = (rows: ReadonlyArray<number>) => {
+    const files = rows
+      .map(r => this.props.files[r])
+      .filter((f): f is CommittedFileChange => f !== undefined)
+    this.props.onSelectionChanged(files)
   }
 
   private renderFile = (row: number) => {
@@ -48,10 +52,11 @@ export class FileList extends React.Component<IFileListProps, IFileListState> {
     )
   }
 
-  private selectedRowsForFile(): ReadonlyArray<number> {
-    const { selectedFile: file, files } = this.props
-    const fileIndex = file ? files.findIndex(f => f.path === file.path) : -1
-    return fileIndex >= 0 ? [fileIndex] : []
+  private selectedRowsForFiles(): ReadonlyArray<number> {
+    const { selectedFiles, files } = this.props
+    return selectedFiles
+      .map(sf => files.findIndex(f => f.path === sf.path))
+      .filter(i => i >= 0)
   }
 
   private onRowContextMenu = (
@@ -75,8 +80,9 @@ export class FileList extends React.Component<IFileListProps, IFileListState> {
           rowRenderer={this.renderFile}
           rowCount={this.props.files.length}
           rowHeight={29}
-          selectedRows={this.selectedRowsForFile()}
-          onSelectedRowChanged={this.onSelectedRowChanged}
+          selectionMode="multi"
+          selectedRows={this.selectedRowsForFiles()}
+          onSelectionChanged={this.onSelectionChanged}
           onRowDoubleClick={this.props.onRowDoubleClick}
           onRowContextMenu={this.onRowContextMenu}
           onRowKeyboardFocus={this.onRowFocus}
