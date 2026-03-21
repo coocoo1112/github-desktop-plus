@@ -151,15 +151,15 @@ chmod +x GitHub-Desktop-Plus-*-linux-*.AppImage
 <details>
 <summary>Click to expand</summary>
 
-#### Using winget
+#### Using Winget (Recommended)
 
 ```powershell
 winget install polrivero.GitHubDesktopPlus
 ```
 
-To update, run `winget upgrade polrivero.GitHubDesktopPlus` or `winget upgrade --all` to update all your winget packages.
+To update, run `winget upgrade polrivero.GitHubDesktopPlus` or `winget upgrade --all` to update all your winget packages. Make sure to update regularly to get the latest features and fixes.
 
-#### Manual download
+#### Manual download (Not recommended)
 
 Download and execute the installer from the [releases page](https://github.com/pol-rivero/github-desktop-plus/releases/latest).
 
@@ -174,6 +174,16 @@ Download and execute the installer from the [releases page](https://github.com/p
 
 <details>
 <summary>Click to expand</summary>
+
+#### Using Homebrew (Recommended)
+
+```bash
+brew install pol-rivero/tap/github-desktop-plus
+```
+
+Make sure to run `brew update` regularly to get the latest updates for GitHub Desktop Plus.
+
+#### Manual download (Not recommended)
 
 Download and extract the ZIP file from the [releases page](https://github.com/pol-rivero/github-desktop-plus/releases/latest). Click the app file to run it.  
 If you encounter the error "Apple could not verify this app is free of malware", go to "System Settings" > "Privacy & Security", scroll down to "Security" and click "Open Anyway" on "GitHub Desktop Plus".

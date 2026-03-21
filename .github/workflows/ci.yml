@@ -569,3 +569,52 @@ jobs:
             ${{ needs.compute_version.outputs.SEMVER_COMPATIBLE_VERSION }}
           installers-regex: '\.exe$'
           token: ${{ secrets.WINGET_TOKEN }}
+
+  release_homebrew:
+    name: Publish Homebrew cask
+    needs: [release_github, compute_version]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: read
+    env:
+      APP_VERSION: ${{ needs.compute_version.outputs.APP_VERSION }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: './artifacts'
+          pattern: 'macOS-*'
+
+      - name: Compute SHA256 checksums
+        run: |
+          SHA256_ARM64=$(sha256sum artifacts/**/*-macOS-arm64.zip | awk '{ print $1 }')
+          SHA256_X64=$(sha256sum artifacts/**/*-macOS-x64.zip | awk '{ print $1 }')
+          echo "SHA256_ARM64=$SHA256_ARM64" >> $GITHUB_ENV
+          echo "SHA256_X64=$SHA256_X64" >> $GITHUB_ENV
+
+      - name: Clone Homebrew Tap
+        uses: actions/checkout@v6
+        with:
+          repository: 'pol-rivero/homebrew-tap'
+          token: ${{ secrets.HOMEBREW_TAP_PERSONAL_ACCESS_TOKEN }}
+          path: homebrew-tap
+
+      - name: Generate Homebrew cask
+        run: |
+          mkdir -p homebrew-tap/Casks
+          sed -e "s/\[\[VERSION\]\]/${APP_VERSION}/" \
+              -e "s/\[\[SHA256_ARM64\]\]/${SHA256_ARM64}/" \
+              -e "s/\[\[SHA256_X64\]\]/${SHA256_X64}/" \
+              publish/homebrew/github-desktop-plus.rb > homebrew-tap/Casks/github-desktop-plus.rb
+
+      - name: Push to Homebrew Tap
+        working-directory: homebrew-tap
+        run: |
+          git config --global user.name "Formula Updater"
+          git config --global user.email "formula-updater@polrivero.com"
+          git add Casks/github-desktop-plus.rb
+          git commit -m "Update github-desktop-plus to version ${APP_VERSION}"
+          git push origin main
