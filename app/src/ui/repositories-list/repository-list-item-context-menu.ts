@@ -76,7 +76,7 @@ export const generateRepositoryListContextMenu = (
               ? 'Open Repository in New Window'
               : 'Open repository in new window',
             action: () => config.onOpenInNewWindow?.(repository),
-          } satisfies IMenuItem,
+          },
         ]
       : []),
     {
