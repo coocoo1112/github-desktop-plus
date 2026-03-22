@@ -634,7 +634,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private titleBarStyle: TitleBarStyle = 'native'
   private showRecentRepositories: boolean = true
   private showWorktrees: boolean = false
-  private hideWindowOnQuit: boolean = false
+  private hideWindowOnQuit: boolean = __DARWIN__
 
   private useWindowsOpenSSH: boolean = false
 
