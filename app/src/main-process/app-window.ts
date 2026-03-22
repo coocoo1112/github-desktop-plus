@@ -106,9 +106,7 @@ export class AppWindow {
     this.addCleanupTask(() => app.removeListener('before-quit', onBeforeQuit))
 
     this.window.on('close', e => {
-      const hideInsteadOfClose =
-        (__DARWIN__ || readMainProcessConfig().hideWindowOnQuit) &&
-        !this.quitting
+      const hideInsteadOfClose = this.shouldHideWindowInsteadOfClose()
       // On macOS, closing the window doesn't mean the app is quitting. If the
       // app is updating, we will prevent the window from closing only when the
       // app is also quitting.
@@ -146,6 +144,19 @@ export class AppWindow {
     })
 
     this.window.on('closed', () => this.cleanup())
+  }
+
+  private shouldHideWindowInsteadOfClose() {
+    // If we are not the main window, we should always close instead of hiding. Otherwise we leak resources.
+    const thisIsMainWindow = this.window === BrowserWindow.getAllWindows()[0]
+    if (!thisIsMainWindow) {
+      return false
+    }
+    // Closing the main window: check the user preference (always hide on macOS to preserve old behavior),
+    // unless explicitly quitting (Ctrl+Q, Cmd+Q, Alt+F4).
+    const userWantsToHideOnQuit =
+      __DARWIN__ || readMainProcessConfig().hideWindowOnQuit
+    return userWantsToHideOnQuit && !this.quitting
   }
 
   public load() {
