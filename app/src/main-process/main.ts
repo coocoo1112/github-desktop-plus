@@ -225,8 +225,21 @@ function handleAppURL(url: string) {
     // This manual focus call _shouldn't_ be necessary, but is for Chrome on
     // macOS. See https://github.com/desktop/desktop/issues/973.
     window.focus()
-    window.sendURLAction(action)
+    if (action.name === 'oauth') {
+      broadcastOAuthAction(action)
+    } else {
+      window.sendURLAction(action)
+    }
   })
+}
+
+function broadcastOAuthAction(action: ReturnType<typeof parseAppURL>) {
+  // Broadcasting the OAuth callback is required since we now support multiple windows,
+  // and any of them could be the one that initiated the OAuth flow. It's simpler to just
+  // broadcast the callback and let the renderer decide if it's relevant to it or not.
+  for (const window of getAppWindows()) {
+    window.sendURLAction(action)
+  }
 }
 
 let isDuplicateInstance = false
