@@ -1082,7 +1082,7 @@ export class App extends React.Component<IAppProps, IAppState> {
     this.updateWindowTitle()
   }
 
-  public componentDidUpdate(_prevProps: IAppProps, prevState: IAppState): void {
+  public componentDidUpdate(prevProps: IAppProps, prevState: IAppState): void {
     if (this.getWindowTitle(prevState) !== this.getWindowTitle()) {
       this.updateWindowTitle()
     }
