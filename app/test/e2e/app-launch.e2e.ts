@@ -252,10 +252,7 @@ test.describe('GitHub Desktop - App Launch', () => {
 // ── Auto-update tests ───────────────────────────────────────────────
 
 test.describe('Auto-update', () => {
-  test.skip(
-    process.platform === 'win32' && !process.env.DESKTOP_E2E_APP_PATH,
-    'Windows auto-update requires an installed Squirrel app, not a packaged app directory.'
-  )
+  test.skip(true, 'Auto-update has been removed in GitHub Desktop Plus.')
 
   test.describe('startup update check', () => {
     test('sends an update check to the mock server on launch', async ({
