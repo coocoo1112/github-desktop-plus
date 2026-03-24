@@ -125,6 +125,9 @@ interface IRepositoryViewProps {
   /** Whether or not to show the changes filter */
   readonly showChangesFilter: boolean
 
+  /** Whether or not to show the Compare tab */
+  readonly showCompareTab: boolean
+
   /**
    * Whether there are any hooks in the repository that could be
    * skipped during commit with the --no-verify flag
@@ -248,9 +251,11 @@ export class RepositoryView extends React.Component<
           <span>History</span>
         </div>
 
-        <div className="with-indicator" id="compare-tab">
-          <span>Compare</span>
-        </div>
+        {this.props.showCompareTab && (
+          <div className="with-indicator" id="compare-tab">
+            <span>Compare</span>
+          </div>
+        )}
       </TabBar>
     )
   }

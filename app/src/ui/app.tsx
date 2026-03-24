@@ -1680,6 +1680,7 @@ export class App extends React.Component<IAppProps, IAppState> {
             titleBarStyle={this.state.titleBarStyle}
             showRecentRepositories={this.state.showRecentRepositories}
             showWorktrees={this.state.showWorktrees}
+            showCompareTab={this.state.showCompareTab}
             repositoryIndicatorsEnabled={this.state.repositoryIndicatorsEnabled}
             hideWindowOnQuit={this.state.hideWindowOnQuit}
             onEditGlobalGitConfig={this.editGlobalGitConfig}
@@ -3717,6 +3718,7 @@ export class App extends React.Component<IAppProps, IAppState> {
           onCherryPick={this.startCherryPickWithoutBranch}
           pullRequestSuggestedNextAction={state.pullRequestSuggestedNextAction}
           showChangesFilter={state.showChangesFilter}
+          showCompareTab={this.state.showCompareTab}
           shouldShowGenerateCommitMessageCallOut={
             !this.state.commitMessageGenerationButtonClicked
           }

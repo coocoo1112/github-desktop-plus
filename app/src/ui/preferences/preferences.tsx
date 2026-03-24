@@ -95,6 +95,7 @@ interface IPreferencesProps {
   readonly titleBarStyle: TitleBarStyle
   readonly showRecentRepositories: boolean
   readonly showWorktrees: boolean
+  readonly showCompareTab: boolean
   readonly repositoryIndicatorsEnabled: boolean
   readonly showBranchNameInRepoList: ShowBranchNameInRepoListSetting
   readonly branchSortOrder: BranchSortOrder
@@ -141,6 +142,7 @@ interface IPreferencesState {
   readonly titleBarStyle: TitleBarStyle
   readonly showRecentRepositories: boolean
   readonly showWorktrees: boolean
+  readonly showCompareTab: boolean
   /**
    * If unable to save Git configuration values (name, email)
    * due to an existing configuration lock file this property
@@ -227,6 +229,7 @@ export class Preferences extends React.Component<
       titleBarStyle: this.props.titleBarStyle,
       showRecentRepositories: this.props.showRecentRepositories,
       showWorktrees: this.props.showWorktrees,
+      showCompareTab: this.props.showCompareTab,
       repositoryIndicatorsEnabled: this.props.repositoryIndicatorsEnabled,
       showBranchNameInRepoList: this.props.showBranchNameInRepoList,
       branchSortOrder: this.props.branchSortOrder,
@@ -564,6 +567,8 @@ export class Preferences extends React.Component<
             }
             showWorktrees={this.state.showWorktrees}
             onShowWorktreesChanged={this.onShowWorktreesChanged}
+            showCompareTab={this.state.showCompareTab}
+            onShowCompareTabChanged={this.onShowCompareTabChanged}
             showBranchNameInRepoList={this.state.showBranchNameInRepoList}
             onShowBranchNameInRepoListChanged={
               this.onShowBranchNameInRepoListChanged
@@ -851,6 +856,10 @@ export class Preferences extends React.Component<
     this.setState({ showWorktrees })
   }
 
+  private onShowCompareTabChanged = (showCompareTab: boolean) => {
+    this.setState({ showCompareTab })
+  }
+
   private renderFooter() {
     const hasDisabledError = this.state.disallowedCharactersMessage != null
 
@@ -915,6 +924,10 @@ export class Preferences extends React.Component<
 
       if (this.state.showWorktrees !== this.props.showWorktrees) {
         dispatcher.setShowWorktrees(this.state.showWorktrees)
+      }
+
+      if (this.state.showCompareTab !== this.props.showCompareTab) {
+        dispatcher.setShowCompareTab(this.state.showCompareTab)
       }
 
       if (this.state.hideWindowOnQuit !== this.props.hideWindowOnQuit) {

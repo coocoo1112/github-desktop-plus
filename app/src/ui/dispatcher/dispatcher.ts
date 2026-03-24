@@ -2928,6 +2928,10 @@ export class Dispatcher {
     this.appStore._setShowWorktrees(showWorktrees)
   }
 
+  public setShowCompareTab(showCompareTab: boolean) {
+    this.appStore._setShowCompareTab(showCompareTab)
+  }
+
   public setHideWindowOnQuit(hideWindowOnQuit: boolean) {
     this.appStore._setHideWindowOnQuit(hideWindowOnQuit)
   }

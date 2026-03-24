@@ -320,6 +320,9 @@ export interface IAppState {
   /** Whether or not the worktrees dropdown should be shown in the toolbar */
   readonly showWorktrees: boolean
 
+  /** Whether or not the Compare tab should be shown in the repository view */
+  readonly showCompareTab: boolean
+
   /**
    * A map keyed on a user account (GitHub.com or GitHub Enterprise)
    * containing an object with repositories that the authenticated

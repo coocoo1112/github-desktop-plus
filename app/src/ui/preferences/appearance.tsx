@@ -29,6 +29,8 @@ interface IAppearanceProps {
   readonly onShowRecentRepositoriesChanged: (show: boolean) => void
   readonly showWorktrees: boolean
   readonly onShowWorktreesChanged: (show: boolean) => void
+  readonly showCompareTab: boolean
+  readonly onShowCompareTabChanged: (show: boolean) => void
   readonly showBranchNameInRepoList: ShowBranchNameInRepoListSetting
   readonly onShowBranchNameInRepoListChanged: (
     value: ShowBranchNameInRepoListSetting
@@ -45,6 +47,7 @@ interface IAppearanceState {
   readonly titleBarStyle: TitleBarStyle
   readonly showRecentRepositories: boolean
   readonly showWorktrees: boolean
+  readonly showCompareTab: boolean
 }
 
 function getTitleBarStyleDescription(titleBarStyle: TitleBarStyle): string {
@@ -73,6 +76,7 @@ export class Appearance extends React.Component<
       titleBarStyle: props.titleBarStyle,
       showRecentRepositories: props.showRecentRepositories,
       showWorktrees: props.showWorktrees,
+      showCompareTab: props.showCompareTab,
     }
 
     if (!usePropTheme) {
@@ -122,6 +126,14 @@ export class Appearance extends React.Component<
     const show = event.currentTarget.checked
     this.setState({ showWorktrees: show })
     this.props.onShowWorktreesChanged(show)
+  }
+
+  private onShowCompareTabChanged = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    const show = event.currentTarget.checked
+    this.setState({ showCompareTab: show })
+    this.props.onShowCompareTabChanged(show)
   }
 
   private onSelectedTabSizeChanged = (
@@ -340,17 +352,30 @@ export class Appearance extends React.Component<
 
   private renderWorktreeVisibility() {
     return (
-      <div className="advanced-section">
-        <h2 id="worktree-heading">{'Worktrees'}</h2>
+      <>
+        <div className="advanced-section">
+          <h2 id="worktree-heading">{'Worktrees'}</h2>
 
-        <Checkbox
-          label="Show worktrees dropdown in toolbar"
-          value={
-            this.state.showWorktrees ? CheckboxValue.On : CheckboxValue.Off
-          }
-          onChange={this.onShowWorktreesChanged}
-        />
-      </div>
+          <Checkbox
+            label="Show worktrees dropdown in toolbar"
+            value={
+              this.state.showWorktrees ? CheckboxValue.On : CheckboxValue.Off
+            }
+            onChange={this.onShowWorktreesChanged}
+          />
+        </div>
+        <div className="advanced-section">
+          <h2>{'Commit list'}</h2>
+
+          <Checkbox
+            label="Show Compare tab"
+            value={
+              this.state.showCompareTab ? CheckboxValue.On : CheckboxValue.Off
+            }
+            onChange={this.onShowCompareTabChanged}
+          />
+        </div>
+      </>
     )
   }
 

@@ -467,6 +467,8 @@ const shellKey = 'shell'
 
 const showRecentRepositoriesKey = 'show-recent-repositories'
 const showWorktreesKey = 'show-worktrees'
+const showCompareTabKey = 'show-compare-tab'
+const showCompareTabDefault = true
 const repositoryIndicatorsEnabledKey = 'enable-repository-indicators'
 
 // background fetching should occur hourly when Desktop is active, but this
@@ -634,6 +636,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private titleBarStyle: TitleBarStyle = 'native'
   private showRecentRepositories: boolean = true
   private showWorktrees: boolean = false
+  private showCompareTab: boolean = showCompareTabDefault
   private hideWindowOnQuit: boolean = __DARWIN__
 
   private useWindowsOpenSSH: boolean = false
@@ -751,6 +754,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.showRecentRepositories = getBoolean(showRecentRepositoriesKey) ?? true
     this.showWorktrees = getBoolean(showWorktreesKey) ?? false
+    this.showCompareTab = getBoolean(showCompareTabKey, showCompareTabDefault)
 
     this.repositoryIndicatorUpdater = new RepositoryIndicatorUpdater(
       this.getRepositoriesForIndicatorRefresh,
@@ -1203,6 +1207,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       titleBarStyle: this.titleBarStyle,
       showRecentRepositories: this.showRecentRepositories,
       showWorktrees: this.showWorktrees,
+      showCompareTab: this.showCompareTab,
       apiRepositories: this.apiRepositoriesStore.getState(),
       useWindowsOpenSSH: this.useWindowsOpenSSH,
       showCommitLengthWarning: this.showCommitLengthWarning,
@@ -4174,6 +4179,25 @@ export class AppStore extends TypedBaseStore<IAppState> {
     setBoolean(showWorktreesKey, showWorktrees)
     this.showWorktrees = showWorktrees
     this.updateResizableConstraints()
+    this.emitUpdate()
+  }
+
+  public _setShowCompareTab(showCompareTab: boolean) {
+    if (this.showCompareTab === showCompareTab) {
+      return
+    }
+    setBoolean(showCompareTabKey, showCompareTab)
+    this.showCompareTab = showCompareTab
+    if (!showCompareTab) {
+      for (const repository of this.repositories) {
+        const state = this.repositoryStateCache.get(repository)
+        if (state.selectedSection === RepositorySectionTab.Compare) {
+          this.repositoryStateCache.update(repository, () => ({
+            selectedSection: RepositorySectionTab.History,
+          }))
+        }
+      }
+    }
     this.emitUpdate()
   }
 
