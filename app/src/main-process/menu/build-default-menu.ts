@@ -119,7 +119,7 @@ export function buildDefaultMenu({
         accelerator: 'CmdOrCtrl+N',
       },
       {
-        label: __DARWIN__ ? 'Open new window…' : 'Open new window…',
+        label: __DARWIN__ ? 'Open new window' : 'Open new window',
         id: 'new-window',
         click: emit('open-new-window'),
         accelerator: 'CmdOrCtrl+Alt+N',
