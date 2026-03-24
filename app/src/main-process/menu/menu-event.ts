@@ -19,6 +19,7 @@ export type MenuEvent =
   | 'permanently-discard-all-changes'
   | 'stash-all-changes'
   | 'show-preferences'
+  | 'show-repository-preferences'
   | 'choose-repository'
   | 'open-working-directory'
   | 'update-branch-with-contribution-target-branch'

@@ -82,6 +82,12 @@ export function buildDefaultMenu({
           accelerator: 'CmdOrCtrl+,',
           click: emit('show-preferences'),
         },
+        {
+          label: 'Repository Options…',
+          id: 'repository-preferences',
+          accelerator: 'CmdOrCtrl+Shift+,',
+          click: emit('show-repository-preferences'),
+        },
         separator,
         {
           label: 'Install Command Line Tool…',
@@ -145,6 +151,12 @@ export function buildDefaultMenu({
         id: 'preferences',
         accelerator: 'CmdOrCtrl+,',
         click: emit('show-preferences'),
+      },
+      {
+        label: 'Repository options…',
+        id: 'repository-preferences',
+        accelerator: 'CmdOrCtrl+Shift+,',
+        click: emit('show-repository-preferences'),
       },
       separator,
       {

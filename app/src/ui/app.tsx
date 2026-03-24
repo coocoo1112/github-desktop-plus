@@ -480,6 +480,8 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.stashAllChanges()
       case 'show-preferences':
         return this.props.dispatcher.showPopup({ type: PopupType.Preferences })
+      case 'show-repository-preferences':
+        return this.showRepositoryPreferences()
       case 'open-working-directory':
         return this.openCurrentRepositoryWorkingDirectory()
       case 'update-branch-with-contribution-target-branch':
@@ -3123,6 +3125,16 @@ export class App extends React.Component<IAppProps, IAppState> {
     }
 
     openRepositoryInNewWindow(repository.path)
+  }
+
+  private showRepositoryPreferences = () => {
+    const repository = this.getRepository()
+    if (repository instanceof Repository) {
+      this.props.dispatcher.showPopup({
+        type: PopupType.RepositorySettings,
+        repository,
+      })
+    }
   }
 
   private getOpenFileInExternalEditorHandler(repository: Repository) {
