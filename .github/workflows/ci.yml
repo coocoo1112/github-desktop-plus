@@ -391,7 +391,7 @@ jobs:
             artifacts/**/*.rpm
             artifacts/**/*.exe
             artifacts/**/*.msi
-            artifacts/**/*.zip
+            artifacts/**/*-macOS-*.zip
           draft: false
           fail_on_unmatched_files: true
         env:
