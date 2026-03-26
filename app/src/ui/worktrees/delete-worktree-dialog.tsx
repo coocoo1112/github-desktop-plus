@@ -8,6 +8,10 @@ import { Ref } from '../lib/ref'
 import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
 import { removeWorktree, getMainWorktreePath } from '../../lib/git/worktree'
 import { normalizePath } from '../../lib/helpers/path'
+import {
+  getPreferredWorktreePath,
+  clearPreferredWorktreePath,
+} from '../../lib/worktree-preferences'
 
 interface IDeleteWorktreeDialogProps {
   readonly repository: Repository
@@ -95,6 +99,18 @@ export class DeleteWorktreeDialog extends React.Component<
       dispatcher.postError(e)
       this.setState({ isDeleting: false })
       return
+    }
+
+    const mainPath = isDeletingCurrentWorktree
+      ? null
+      : await getMainWorktreePath(repository)
+    const resolvedMainPath = mainPath ?? repository.path
+    const preferred = getPreferredWorktreePath(resolvedMainPath)
+    if (
+      preferred &&
+      normalizePath(preferred) === normalizePath(worktreePath)
+    ) {
+      clearPreferredWorktreePath(resolvedMainPath)
     }
 
     this.props.onDismissed()

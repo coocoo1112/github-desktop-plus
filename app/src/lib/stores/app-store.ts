@@ -200,6 +200,11 @@ import {
 } from '../../ui/lib/diff-mode'
 import { pathExists } from '../../ui/lib/path-exists'
 import { updateStore } from '../../ui/lib/update-store'
+import {
+  getPreferredWorktreePath,
+  clearPreferredWorktreePath,
+} from '../worktree-preferences'
+import { normalizePath } from '../helpers/path'
 import { resizableComponentClass } from '../../ui/resizable'
 import { BypassReasonType } from '../../ui/secret-scanning/bypass-push-protection-dialog'
 import { findContributionTargetDefaultBranch } from '../branch'
@@ -2155,6 +2160,43 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     if (!(repository instanceof Repository)) {
       return Promise.resolve(null)
+    }
+
+    // When returning to a repository that has worktrees, restore the
+    // previously active linked worktree so the user doesn't always land
+    // on the main worktree after switching repos.
+    if (!repository.isLinkedWorktree) {
+      const repoPath = normalizePath(repository.path)
+      const preferredPath = getPreferredWorktreePath(repoPath)
+
+      if (preferredPath && preferredPath !== repoPath) {
+        const linkedRepo = this.repositories.find(
+          r =>
+            r instanceof Repository &&
+            normalizePath(r.path) === preferredPath
+        )
+
+        if (linkedRepo instanceof Repository) {
+          repository = linkedRepo
+          this.selectedRepository = repository
+          this.emitUpdate()
+        } else {
+          const exists = await pathExists(preferredPath)
+          if (exists) {
+            const addedRepos = await this._addRepositories(
+              [preferredPath],
+              repository.login
+            )
+            if (addedRepos.length > 0) {
+              repository = addedRepos[0]
+              this.selectedRepository = repository
+              this.emitUpdate()
+            }
+          } else {
+            clearPreferredWorktreePath(repoPath)
+          }
+        }
+      }
     }
 
     if (persistSelection) {
