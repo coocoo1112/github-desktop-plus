@@ -106,10 +106,7 @@ export class DeleteWorktreeDialog extends React.Component<
       : await getMainWorktreePath(repository)
     const resolvedMainPath = mainPath ?? repository.path
     const preferred = getPreferredWorktreePath(resolvedMainPath)
-    if (
-      preferred &&
-      normalizePath(preferred) === normalizePath(worktreePath)
-    ) {
+    if (preferred && normalizePath(preferred) === normalizePath(worktreePath)) {
       clearPreferredWorktreePath(resolvedMainPath)
     }
 

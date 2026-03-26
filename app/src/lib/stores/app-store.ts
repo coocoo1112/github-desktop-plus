@@ -2172,8 +2172,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       if (preferredPath && preferredPath !== repoPath) {
         const linkedRepo = this.repositories.find(
           r =>
-            r instanceof Repository &&
-            normalizePath(r.path) === preferredPath
+            r instanceof Repository && normalizePath(r.path) === preferredPath
         )
 
         if (linkedRepo instanceof Repository) {
