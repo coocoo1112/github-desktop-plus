@@ -2148,17 +2148,18 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.selectedRepository = repository
 
-    this.emitUpdate()
     this.stopBackgroundFetching()
     this.stopPullRequestUpdater()
     this._clearBanner()
     this.stopBackgroundPruner()
 
     if (repository == null) {
+      this.emitUpdate()
       return Promise.resolve(null)
     }
 
     if (!(repository instanceof Repository)) {
+      this.emitUpdate()
       return Promise.resolve(null)
     }
 
@@ -2195,6 +2196,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
         }
       }
     }
+
+    this.emitUpdate()
 
     if (persistSelection) {
       setNumber(LastSelectedRepositoryIDKey, repository.id)

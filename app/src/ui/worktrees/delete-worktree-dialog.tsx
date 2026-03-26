@@ -77,10 +77,11 @@ export class DeleteWorktreeDialog extends React.Component<
         // When deleting the currently selected worktree, we must switch away
         // first. Otherwise git runs from the directory being deleted and the
         // app is left pointing at a non-existent path.
-        const mainPath = await getMainWorktreePath(repository)
-        if (mainPath === null) {
+        if (mainPathForCleanup === null) {
           throw new Error('Could not find main worktree')
         }
+
+        const mainPath = mainPathForCleanup
 
         const addedRepos = await dispatcher.addRepositories(
           [mainPath],
